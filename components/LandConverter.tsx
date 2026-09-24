@@ -2,11 +2,12 @@ import React, { useState, useMemo, useCallback } from 'react';
 import Card from './Card';
 import { LAND_UNITS } from '../constants';
 import { SwapIcon } from './icons';
+import { NumField, toNum, ClearButton } from './NumField';
 
 type ThaiLandUnits = {
-  rai: number;
-  ngan: number;
-  sqwa: number;
+  rai: string;
+  ngan: string;
+  sqwa: string;
 };
 
 const numberFormat = new Intl.NumberFormat('th-TH', { maximumFractionDigits: 4 });
@@ -16,23 +17,25 @@ const selectStyles = "w-full bg-gray-800 border border-gray-700 rounded-lg p-3 f
 const LandConverter: React.FC = () => {
   const [mode, setMode] = useState<'thaiToInter' | 'interToThai'>('thaiToInter');
   
-  const [thaiUnits, setThaiUnits] = useState<ThaiLandUnits>({ rai: 1, ngan: 0, sqwa: 0 });
-  const [interValue, setInterValue] = useState<number>(1600);
+  const [thaiUnits, setThaiUnits] = useState<ThaiLandUnits>({ rai: '', ngan: '', sqwa: '' });
+  const [interText, setInterText] = useState('');
+  const interValue = toNum(interText);
   
   const [targetUnit, setTargetUnit] = useState<string>('sqm');
   const [sourceUnit, setSourceUnit] = useState<string>('sqm');
 
   const handleThaiUnitChange = (unit: keyof ThaiLandUnits, value: string) => {
-    const numValue = parseFloat(value) || 0;
-    setThaiUnits(prev => ({...prev, [unit]: numValue }));
+    setThaiUnits(prev => ({ ...prev, [unit]: value }));
   };
-  
-  const handleInterValueChange = (value: string) => {
-    setInterValue(parseFloat(value) || 0);
+
+  const hasInput = mode === 'thaiToInter' ? !!(thaiUnits.rai || thaiUnits.ngan || thaiUnits.sqwa) : !!interText;
+  const clearAll = () => {
+    setThaiUnits({ rai: '', ngan: '', sqwa: '' });
+    setInterText('');
   };
 
   const totalBaseValueFromThai = useMemo(() => {
-    const totalSqWa = (thaiUnits.rai * 400) + (thaiUnits.ngan * 100) + thaiUnits.sqwa;
+    const totalSqWa = (toNum(thaiUnits.rai) * 400) + (toNum(thaiUnits.ngan) * 100) + toNum(thaiUnits.sqwa);
     return LAND_UNITS['sqwa'].toBase(totalSqWa);
   }, [thaiUnits]);
 
@@ -63,27 +66,33 @@ const LandConverter: React.FC = () => {
       <div className="flex flex-col gap-6">
         {mode === 'thaiToInter' ? (
           <div>
-            <label className="block text-sm font-medium text-slate-400 mb-2">ใส่จำนวนที่ดินไทย</label>
+            <div className="mb-2 flex items-center justify-between">
+              <label className="block text-sm font-medium text-slate-400">ใส่จำนวนที่ดินไทย</label>
+              <ClearButton onClick={clearAll} disabled={!hasInput} />
+            </div>
             <div className="flex flex-col sm:flex-row gap-4">
                <div className="flex-1">
                  <label className="text-xs text-slate-400 mb-1 block">ไร่</label>
-                 <input type="number" value={thaiUnits.rai} onChange={e => handleThaiUnitChange('rai', e.target.value)} className={inputStyles} />
+                 <NumField value={thaiUnits.rai} onChange={v => handleThaiUnitChange('rai', v)} className={inputStyles} />
                </div>
                <div className="flex-1">
                  <label className="text-xs text-slate-400 mb-1 block">งาน</label>
-                 <input type="number" value={thaiUnits.ngan} onChange={e => handleThaiUnitChange('ngan', e.target.value)} className={inputStyles} />
+                 <NumField value={thaiUnits.ngan} onChange={v => handleThaiUnitChange('ngan', v)} className={inputStyles} />
                </div>
                <div className="flex-1">
                  <label className="text-xs text-slate-400 mb-1 block">ตารางวา</label>
-                 <input type="number" value={thaiUnits.sqwa} onChange={e => handleThaiUnitChange('sqwa', e.target.value)} className={inputStyles} />
+                 <NumField value={thaiUnits.sqwa} onChange={v => handleThaiUnitChange('sqwa', v)} className={inputStyles} />
                </div>
             </div>
           </div>
         ) : (
           <div>
-             <label className="block text-sm font-medium text-slate-400 mb-2">ใส่จำนวนที่ดินสากล</label>
+            <div className="mb-2 flex items-center justify-between">
+              <label className="block text-sm font-medium text-slate-400">ใส่จำนวนที่ดินสากล</label>
+              <ClearButton onClick={clearAll} disabled={!hasInput} />
+            </div>
             <div className="flex gap-4">
-              <input type="number" value={interValue} onChange={e => handleInterValueChange(e.target.value)} className={`w-2/3 ${inputStyles}`} />
+              <NumField value={interText} onChange={setInterText} className={`w-2/3 ${inputStyles}`} />
                <select value={sourceUnit} onChange={e => setSourceUnit(e.target.value)} className={`w-1/3 ${selectStyles}`}>
                 {Object.values(LAND_UNITS).filter(u => !['rai', 'ngan', 'sqwa'].includes(u.key)).map(unit => (
                     <option key={unit.key} value={unit.key}>{unit.name}</option>

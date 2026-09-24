@@ -2,6 +2,7 @@ import React, { useState, useMemo } from 'react';
 import Card from './Card';
 import { GOLD_UNITS, GOLD_UNITS_BAR, GOLD_UNITS_JEWELRY } from '../constants';
 import { ArrowDownIcon } from './icons';
+import { NumField, toNum, ClearButton } from './NumField';
 
 type GoldType = 'bar' | 'jewelry';
 const numberFormat = new Intl.NumberFormat('th-TH', { maximumFractionDigits: 4 });
@@ -9,7 +10,8 @@ const inputStyles = "w-full bg-gray-800 border border-gray-700 rounded-lg p-3 fo
 const selectStyles = "w-full bg-gray-800 border border-gray-700 rounded-lg p-3 focus:ring-0 focus:border-amber-500 transition-colors appearance-none";
 
 const GoldConverter: React.FC = () => {
-  const [inputValue, setInputValue] = useState<number>(1);
+  const [inputText, setInputText] = useState('');
+  const inputValue = toNum(inputText);
   const [fromUnit, setFromUnit] = useState<string>('baht');
   const [toUnit, setToUnit] = useState<string>('gram');
   const [goldType, setGoldType] = useState<GoldType>('bar');
@@ -34,10 +36,6 @@ const GoldConverter: React.FC = () => {
     return fromBase(baseValue, toUnit, goldType);
   }, [inputValue, fromUnit, toUnit, goldType]);
 
-  const handleInputChange = (e: React.ChangeEvent<HTMLInputElement>) => {
-    setInputValue(parseFloat(e.target.value) || 0);
-  };
-
   return (
     <Card title="แปลงหน่วยทองคำ (บาท-สลึง)">
       <div className="space-y-6">
@@ -51,8 +49,11 @@ const GoldConverter: React.FC = () => {
 
         <div className="grid grid-cols-1 md:grid-cols-2 gap-4 items-end">
           <div>
-            <label htmlFor="fromValue" className="block text-sm font-medium text-slate-400 mb-2">จำนวน</label>
-            <input id="fromValue" type="number" value={inputValue} onChange={handleInputChange} className={inputStyles} />
+            <div className="mb-2 flex items-center justify-between">
+              <label htmlFor="fromValue" className="block text-sm font-medium text-slate-400">จำนวน</label>
+              <ClearButton onClick={() => setInputText('')} disabled={!inputText} />
+            </div>
+            <NumField id="fromValue" value={inputText} onChange={setInputText} className={inputStyles} />
           </div>
           <div>
             <label htmlFor="fromUnit" className="block text-sm font-medium text-slate-400 mb-2">จากหน่วย</label>

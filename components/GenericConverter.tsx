@@ -3,6 +3,7 @@ import Card from './Card';
 import { UNIT_CONFIGS, CATEGORIES_DATA } from '../constants';
 import { Unit, CategoryId } from '../types';
 import { ArrowDownIcon, SwapIcon } from './icons';
+import { NumField, toNum, ClearButton } from './NumField';
 
 interface GenericConverterProps {
   categoryId: CategoryId;
@@ -17,7 +18,8 @@ const GenericConverter: React.FC<GenericConverterProps> = ({ categoryId }) => {
   const categoryInfo = CATEGORIES_DATA[categoryId];
   const { units, description } = config || {};
   const unitKeys = units ? Object.keys(units) : [];
-  const [inputValue, setInputValue] = useState<number>(1);
+  const [inputText, setInputText] = useState('');
+  const inputValue = toNum(inputText);
   const [fromUnit, setFromUnit] = useState<string>(unitKeys[1] || unitKeys[0]);
   const [toUnit, setToUnit] = useState<string>(unitKeys[0]);
   const [copied, setCopied] = useState(false);
@@ -27,7 +29,7 @@ const GenericConverter: React.FC<GenericConverterProps> = ({ categoryId }) => {
       const keys = Object.keys(units);
       setFromUnit(keys[1] || keys[0]);
       setToUnit(keys[0]);
-      setInputValue(1);
+      setInputText('');
       setCopied(false);
     }
   }, [categoryId, units]);
@@ -72,8 +74,11 @@ const GenericConverter: React.FC<GenericConverterProps> = ({ categoryId }) => {
       <div className="space-y-6">
         <div className="grid grid-cols-1 items-end gap-4 md:grid-cols-2">
           <div>
-            <label htmlFor={`${categoryId}-fromValue`} className="mb-2 block text-sm font-medium text-slate-400">จำนวน</label>
-            <input id={`${categoryId}-fromValue`} type="number" min="0" step="any" value={inputValue} onChange={(event) => setInputValue(parseFloat(event.target.value) || 0)} className={inputStyles} />
+            <div className="mb-2 flex items-center justify-between">
+              <label htmlFor={`${categoryId}-fromValue`} className="block text-sm font-medium text-slate-400">จำนวน</label>
+              <ClearButton onClick={() => setInputText('')} disabled={!inputText} />
+            </div>
+            <NumField id={`${categoryId}-fromValue`} value={inputText} onChange={setInputText} className={inputStyles} />
           </div>
           <div>
             <label htmlFor={`${categoryId}-fromUnit`} className="mb-2 block text-sm font-medium text-slate-400">จากหน่วย</label>
