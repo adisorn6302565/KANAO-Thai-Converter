@@ -78,7 +78,7 @@ const GenericConverter: React.FC<GenericConverterProps> = ({ categoryId }) => {
           <div>
             <label htmlFor={`${categoryId}-fromUnit`} className="mb-2 block text-sm font-medium text-slate-400">จากหน่วย</label>
             <select id={`${categoryId}-fromUnit`} value={fromUnit} onChange={(event) => setFromUnit(event.target.value)} className={selectStyles}>
-              {Object.values(units).map((unit) => <option key={unit.key} value={unit.key}>{unit.name}</option>)}
+              {Object.values(units ?? {}).map((unit: Unit) => <option key={unit.key} value={unit.key}>{unit.name}</option>)}
             </select>
           </div>
         </div>
@@ -101,7 +101,7 @@ const GenericConverter: React.FC<GenericConverterProps> = ({ categoryId }) => {
           <div>
             <label htmlFor={`${categoryId}-toUnit`} className="mb-2 block text-sm font-medium text-slate-400">เป็นหน่วย</label>
             <select id={`${categoryId}-toUnit`} value={toUnit} onChange={(event) => setToUnit(event.target.value)} className={selectStyles}>
-              {Object.values(units).map((unit) => <option key={unit.key} value={unit.key}>{unit.name}</option>)}
+              {Object.values(units ?? {}).map((unit: Unit) => <option key={unit.key} value={unit.key}>{unit.name}</option>)}
             </select>
           </div>
         </div>

@@ -6,7 +6,7 @@ export type CategoryId = 'land' | 'gold' | 'agriculture' | 'length' | 'weight' |
 export interface Category {
   id: CategoryId;
   name: string;
-  icon: JSX.Element;
+  icon: React.ReactElement;
 }
 
 export interface Unit {

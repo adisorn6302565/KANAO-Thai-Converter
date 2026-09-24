@@ -1,92 +1,64 @@
-# Thai-Centric Converter 🇹🇭
+# 🇹🇭 KANAO Thai Converter
 
-เครื่องมือแปลงหน่วยสำหรับหน่วยวัดที่คนไทยใช้งานจริง เช่น ไร่ งาน ตารางวา บาททองคำ สลึง เกวียน หาบ วา ศอก และทะนาน โดยออกแบบให้ใช้งานง่ายบนมือถือและคำนวณในเบราว์เซอร์โดยตรง
+[![Deploy](https://github.com/adisorn6302565/KANAO-Thai-Converter/actions/workflows/pages.yml/badge.svg)](https://github.com/adisorn6302565/KANAO-Thai-Converter/actions/workflows/pages.yml)
+![React](https://img.shields.io/badge/React-19-61DAFB?logo=react&logoColor=white)
+![Vite](https://img.shields.io/badge/Vite-6-646CFF?logo=vite&logoColor=white)
 
-## จุดเด่น
+เครื่องมือแปลงหน่วยวัดแบบไทย เช่น ไร่-งาน-วา, บาททองคำ-สลึง, เกวียน-ถัง, วา-ศอก-คืบ, หาบ-ชั่ง-ตำลึง, ทะนาน ใช้ง่ายบนมือถือ คำนวณในเบราว์เซอร์ทั้งหมด
 
-- แปลงหน่วยที่ดิน: ไร่ งาน ตารางวา ตารางเมตร เอเคอร์ และเฮกตาร์
-- แปลงหน่วยทองคำ: บาท สลึง กรัม และทรอยออนซ์ พร้อมเลือกทองคำแท่ง/ทองรูปพรรณ
-- แปลงหน่วยเกษตร: เกวียน ถัง และกิโลกรัม
-- แปลงหน่วยความยาว: วา ศอก คืบ เส้น โยชน์ และเมตร
-- แปลงหน่วยน้ำหนัก: หาบ ชั่ง ตำลึง และกิโลกรัม
-- แปลงหน่วยปริมาตร: ทะนานและลิตร
-- ค้นหาหมวดหน่วยจากหน้าแรก
-- ปักหมวดที่ใช้บ่อยเป็นรายการโปรด
-- จำหมวดล่าสุดและรายการโปรดไว้ในเครื่องด้วย `localStorage`
-- สลับหน่วยต้นทาง/ปลายทางได้ในคลิกเดียว
-- คัดลอกผลลัพธ์ไปใช้ต่อได้ทันที
-- แสดงอัตราแปลงของ 1 หน่วย พร้อมข้อมูลอ้างอิงของแต่ละหมวด
-- ไม่ต้องใช้ API key และไม่ส่งค่าที่กรอกไปยังเซิร์ฟเวอร์
+## 🌐 ใช้งานออนไลน์
 
-## เทคโนโลยี
+**https://adisorn6302565.github.io/KANAO-Thai-Converter/**
 
-- React 19
-- TypeScript
-- Vite
-- Tailwind CSS ผ่าน CDN สำหรับส่วนติดต่อผู้ใช้
-- รองรับ Node.js 18 ขึ้นไป
+## ✨ ฟีเจอร์
 
-## เริ่มใช้งาน
+| หมวด | หน่วย |
+|---|---|
+| ที่ดิน | ไร่ งาน ตารางวา ตร.ม. เอเคอร์ เฮกตาร์ |
+| ทองคำ | บาท สลึง กรัม ทรอยออนซ์ (ทองแท่ง 15.244 g / ทองรูปพรรณ 15.16 g) |
+| เกษตร | เกวียน ถัง กิโลกรัม |
+| ความยาว | วา ศอก คืบ เส้น โยชน์ เมตร |
+| น้ำหนัก | หาบ ชั่ง ตำลึง กิโลกรัม |
+| ปริมาตร | ทะนาน ลิตร |
 
-เปิด PowerShell ในโฟลเดอร์โปรเจกต์:
+- ค้นหาหมวด, ปักหมวดที่ใช้บ่อย, จำหมวดล่าสุด (`localStorage`)
+- สลับหน่วยต้นทาง/ปลายทาง, คัดลอกผลลัพธ์
+- ไม่มี backend ไม่ส่งค่าที่กรอกออกไปไหน
 
-```powershell
-cd D:\โปรแกรม\โฟลเดอร์ภาษาไทย
+## 🧩 การทำงาน
+
+```mermaid
+flowchart LR
+    A[เลือกหมวด] --> B{หมวด}
+    B -->|ที่ดิน| L[LandConverter<br/>ไร่-งาน-วา ↔ ตร.ม.]
+    B -->|ทองคำ| G[GoldConverter<br/>แท่ง / รูปพรรณ]
+    B -->|อื่น ๆ| C[GenericConverter]
+    C --> U[(UNIT_CONFIGS<br/>ค่าแปลงเป็นหน่วยฐาน)]
+    U --> R[ผลลัพธ์ = ค่า × จาก ÷ ไป]
+```
+
+## 💻 รันในเครื่อง
+
+ต้องมี [Node.js 20+](https://nodejs.org/)
+
+```bash
 npm install
-npm run dev
+npm run dev      # http://localhost:3000
+npm run build    # ไฟล์ static ใน dist/
 ```
 
-จากนั้นเปิด URL ที่ Vite แสดง เช่น:
+**Deploy:** push เข้า `main` → GitHub Actions build แล้วขึ้น GitHub Pages อัตโนมัติ
 
 ```text
-http://localhost:5173
+├── App.tsx
+├── components/   # LandConverter, GoldConverter, GenericConverter, Card, icons
+├── constants.tsx # ค่าแปลงหน่วยทั้งหมด
+├── types.ts
+└── index.css     # Tailwind
 ```
 
-## Build สำหรับ production
+## 🆕 v1.1
 
-```powershell
-npm run build
-npm run preview
-```
-
-ไฟล์ production จะถูกสร้างไว้ในโฟลเดอร์ `dist/`
-
-## โครงสร้างโปรเจกต์
-
-```text
-.
-├─ components/
-│  ├─ GenericConverter.tsx   # ตัวแปลงหน่วยทั่วไป
-│  ├─ GoldConverter.tsx      # ตัวแปลงทองคำ
-│  ├─ LandConverter.tsx      # ตัวแปลงที่ดิน
-│  ├─ Card.tsx
-│  └─ icons.tsx
-├─ App.tsx                   # layout, search และรายการโปรด
-├─ constants.tsx             # สูตรและชุดหน่วยทั้งหมด
-├─ types.ts                  # TypeScript types
-├─ index.tsx                 # entry point
-├─ index.html
-└─ index.css
-```
-
-## ค่ามาตรฐานที่ใช้
-
-สูตรแปลงหลักถูกเก็บไว้ใน `constants.tsx` เพื่อให้ตรวจสอบและแก้ไขได้ง่าย ตัวอย่างเช่น:
-
-- 1 ไร่ = 4 งาน = 400 ตารางวา
-- 1 ตารางวา = 4 ตารางเมตร
-- 1 บาททองคำแท่ง = 15.244 กรัม
-- 1 บาททองรูปพรรณ = 15.16 กรัม
-- 1 บาท = 4 สลึง
-
-หน่วยไทยบางประเภทอาจมีมาตรฐานต่างกันตามพื้นที่หรือชนิดสินค้า ควรตรวจสอบกับเอกสาร/คู่สัญญาที่ใช้จริงก่อนนำไปคำนวณเชิงธุรกิจ
-
-## ตรวจสอบก่อนส่งขึ้น production
-
-```powershell
-npm run build
-```
-
-## ผู้เขียน
-
-นาย อดิศร รักคล้าย
+- build ไม่ผ่านจาก type error (`JSX` namespace ของ React 19, `units` เป็น `unknown`) แก้แล้ว
+- เลิกใช้ Tailwind / React จาก CDN ตอนรัน เปลี่ยนเป็น build ปกติ (โหลดเร็วขึ้น ใช้ offline ได้)
+- Deploy GitHub Pages อัตโนมัติ

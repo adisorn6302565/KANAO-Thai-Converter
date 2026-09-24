@@ -4,7 +4,7 @@ import { Category, Unit, CategoryId } from './types';
 import { AreaIcon, GoldIcon, AgricultureIcon, LengthIcon, WeightIcon, VolumeIcon } from './components/icons';
 
 // FIX: Explicitly type CATEGORIES_DATA with the imported CategoryId to ensure correctness.
-export const CATEGORIES_DATA: { [key in CategoryId]: { name: string; icon: JSX.Element } } = {
+export const CATEGORIES_DATA: { [key in CategoryId]: { name: string; icon: React.ReactElement } } = {
   land: { name: 'ที่ดิน (ไร่-งาน-วา)', icon: <AreaIcon /> },
   gold: { name: 'ทองคำ (บาท-สลึง)', icon: <GoldIcon /> },
   agriculture: { name: 'เกษตร (เกวียน-ถัง)', icon: <AgricultureIcon /> },
